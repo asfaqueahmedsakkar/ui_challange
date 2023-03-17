@@ -3,10 +3,27 @@ var _a;
 let scrollable = new Scrollable(document.getElementById('page'), ScrollDirection.vertical);
 scrollable.addScrollEventListener((event) => {
     if (event == ScrollEvent.stop) {
+        console.log("Stoped");
+    }
+    if (event == ScrollEvent.scrolling) {
+        console.log("Scrolling");
+    }
+    if (event == ScrollEvent.start) {
+        console.log("Started");
     }
 });
-var animation = new Animator({ duration: new Duration({ second: 2 }) });
-animation.addListener((e) => scrollable.updateScroll(e));
+var animator = new Animator({ duration: new Duration({ second: 5 }), curve: Curves.linner });
+animator.addListener((animationValue) => {
+    scrollable.updateScroll(animationValue);
+});
 (_a = document.getElementById('page')) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
-    scrollable.scrollTo(scrollable.getScroll() + 500, new Duration({ second: 2 }), Curves.easeInQuad);
+    if (animator.status == AnimatorStatus.stoped) {
+        animator.play({ from: scrollable.getScroll(), to: scrollable.getScroll() + 2000 });
+    }
+    else if (animator.status == AnimatorStatus.playing || animator.status == AnimatorStatus.started) {
+        animator.pause();
+    }
+    else if (animator.status == AnimatorStatus.paused) {
+        animator.resume();
+    }
 });

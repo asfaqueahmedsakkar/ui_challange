@@ -12,6 +12,7 @@ scrollable.addScrollEventListener((event) => {
     }
 });
 
+
 var animator: Animator = new Animator({ duration: new Duration({ second: 5 }), curve: Curves.linner });
 
 animator.addListener((animationValue) => {
@@ -20,12 +21,15 @@ animator.addListener((animationValue) => {
 
 document.getElementById('page')?.addEventListener("click", () => {
     if (animator.status == AnimatorStatus.stoped) {
+        console.log(1);
         animator.play({ from: scrollable.getScroll(), to: scrollable.getScroll() + 2000 })
     }
     else if (animator.status == AnimatorStatus.playing || animator.status == AnimatorStatus.started) {
+        console.log(2);
         animator.pause()
     }
     else if (animator.status == AnimatorStatus.paused) {
+        console.log(3);
         animator.resume()
     }
 });

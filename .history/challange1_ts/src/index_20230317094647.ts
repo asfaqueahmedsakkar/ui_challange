@@ -12,6 +12,7 @@ scrollable.addScrollEventListener((event) => {
     }
 });
 
+
 var animator: Animator = new Animator({ duration: new Duration({ second: 5 }), curve: Curves.linner });
 
 animator.addListener((animationValue) => {
