@@ -32,13 +32,6 @@ class Scrollable {
             return this.element.scrollLeft;
     }
 
-    getSize(): number {
-        if (this.direction == ScrollDirection.vertical)
-            return this.element.offsetHeight;
-        else
-            return this.element.offsetWidth;
-    }
-
     updateScroll(scroll: number): void {
         if (this.direction == ScrollDirection.vertical)
             this.element.scrollTop = scroll;

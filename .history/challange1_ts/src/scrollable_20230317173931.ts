@@ -32,7 +32,7 @@ class Scrollable {
             return this.element.scrollLeft;
     }
 
-    getSize(): number {
+    getWidth(): number {
         if (this.direction == ScrollDirection.vertical)
             return this.element.offsetHeight;
         else

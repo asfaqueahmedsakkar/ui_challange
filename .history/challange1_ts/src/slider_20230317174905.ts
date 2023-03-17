@@ -34,7 +34,7 @@ class Slider {
 
     slideTo({ sliderNo }: { sliderNo: number }) {
         this.nextSlide=sliderNo;
-        var scrollPosition=sliderNo*this.scrollable.getSize(); 
+        var pagePosition=
         this.scrollable.scrollTo()
     }
 

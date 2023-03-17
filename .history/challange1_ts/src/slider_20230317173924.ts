@@ -8,9 +8,6 @@ class Slider {
     direction: ScrollDirection;
 
     private scrollable: Scrollable;
-    private currentSlide: number;
-    private nextSlide: number;
-    private
 
     constructor(element: HTMLElement,
         { ratio, autoSlide, autoSlideDuration, initialSlide, infiniteLoop, direction }:
@@ -23,19 +20,15 @@ class Slider {
         this.initialSlide = initialSlide;
         this.infiniteLoop = infiniteLoop;
         this.direction = direction;
-        this.currentSlide = initialSlide;
-        this.nextSlide = initialSlide;
         this.scrollable = new Scrollable(element);
     }
 
     getCurrentSlider(): number {
-        return this.currentSlide;
+        return this.scrollable.getScroll():
     }
 
     slideTo({ sliderNo }: { sliderNo: number }) {
-        this.nextSlide=sliderNo;
-        var scrollPosition=sliderNo*this.scrollable.getSize(); 
-        this.scrollable.scrollTo()
+
     }
 
 }
