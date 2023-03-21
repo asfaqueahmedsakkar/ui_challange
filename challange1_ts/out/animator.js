@@ -9,6 +9,10 @@ class Duration {
         this.second = second;
         this.minute = minute;
     }
+    getInMillisecond() {
+        var _b, _c, _d, _e;
+        return ((_b = this.second) !== null && _b !== void 0 ? _b : 0) * 1000 + ((_c = this.minute) !== null && _c !== void 0 ? _c : 0) * 60 * 1000 + ((_d = this.microsecond) !== null && _d !== void 0 ? _d : 0) / 1000 + ((_e = this.millisecond) !== null && _e !== void 0 ? _e : 0);
+    }
 }
 class Curve {
 }
@@ -174,13 +178,12 @@ class Animator {
         this.curve = curve !== null && curve !== void 0 ? curve : Curves.linner;
     }
     play({ from = 0, to = 1, duration, curve } = { from: 0, to: 1 }) {
-        var _b, _c, _d, _e;
         this.from = from;
         this.to = to;
         this.status = AnimatorStatus.started;
         this.curveInUse = curve !== null && curve !== void 0 ? curve : this.curve;
         this.durationInUse = duration !== null && duration !== void 0 ? duration : this.duration;
-        const durationInMilisecond = ((_b = this.durationInUse.second) !== null && _b !== void 0 ? _b : 0) * 1000 + ((_c = this.durationInUse.minute) !== null && _c !== void 0 ? _c : 0) * 60 * 1000 + ((_d = this.durationInUse.microsecond) !== null && _d !== void 0 ? _d : 0) / 1000 + ((_e = this.durationInUse.millisecond) !== null && _e !== void 0 ? _e : 0);
+        const durationInMilisecond = this.durationInUse.getInMillisecond();
         this.totalFrame = durationInMilisecond / this.intervalInMillisecond;
         this.frameCount = 0;
         this.startAnimation();
