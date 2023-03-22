@@ -19,6 +19,11 @@ class Duration {
         this.second = second;
         this.minute = minute;
     }
+
+
+    getInMillisecond(): number {
+        return (this.second ?? 0) * 1000 + (this.minute ?? 0) * 60 * 1000 + (this.microsecond ?? 0) / 1000 + (this.millisecond ?? 0);
+    }
 }
 
 interface AnimatorParameter {
@@ -222,7 +227,7 @@ class Animator {
         this.curveInUse = curve ?? this.curve;
         this.durationInUse = duration ?? this.duration;
 
-        const durationInMilisecond: number = (this.durationInUse.second ?? 0) * 1000 + (this.durationInUse.minute ?? 0) * 60 * 1000 + (this.durationInUse.microsecond ?? 0) / 1000 + (this.durationInUse.millisecond ?? 0);
+        const durationInMilisecond: number = this.durationInUse.getInMillisecond();
         this.totalFrame = durationInMilisecond / this.intervalInMillisecond;
         this.frameCount = 0;
 

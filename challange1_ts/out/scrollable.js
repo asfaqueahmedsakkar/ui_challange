@@ -33,6 +33,12 @@ class Scrollable {
         else
             this.element.scrollLeft = scroll;
     }
+    getSize() {
+        if (this.direction == ScrollDirection.vertical)
+            return this.element.offsetHeight;
+        else
+            return this.element.offsetWidth;
+    }
     scrollTo(position, duration = new Duration(), curve = Curves.linner) {
         this.animation.stop();
         this.animation.addListener((value) => this.updateScroll(value));
@@ -64,6 +70,10 @@ class Scrollable {
                 }
             }
         });
+    }
+    getScrollState() {
+        var _a;
+        return (_a = this.animation) === null || _a === void 0 ? void 0 : _a.status;
     }
 }
 var ScrollEvent;
