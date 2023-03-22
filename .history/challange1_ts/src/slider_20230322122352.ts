@@ -15,9 +15,9 @@ class Slider {
     private nextSlide: number;
 
     constructor(element: HTMLElement,
-        { ratio: ratio = 1, autoSlide: autoSlide = false, autoSlideDuration: autoSlideDuration = new Duration({ second: 1 }), initialSlide: initialSlide = 0, infiniteLoop: infiniteLoop = false, direction = ScrollDirection.horizontal }:
-            { ratio?: number, autoSlide?: boolean, autoSlideDuration?: Duration, initialSlide?: number, infiniteLoop?: boolean, direction?: ScrollDirection } =
-            { ratio: 1, autoSlide: false, autoSlideDuration: new Duration({ second: 5 }), initialSlide: 0, infiniteLoop: false, direction: ScrollDirection.horizontal }) {
+        { ratio: ratio = 1, autoSlide: autoSlide = false, autoSlideDuration: autoSlideDuration = new Duration({ second: 1 }), initialSlide: initialSlide = 0, infiniteLoop: infiniteLoop = false }:
+            { ratio?: number, autoSlide?: boolean, autoSlideDuration?: Duration, initialSlide?: number, infiniteLoop?: boolean } =
+            { ratio: 1, autoSlide: false, autoSlideDuration: new Duration({ second: 5 }), initialSlide: 0, infiniteLoop: false }) {
         this.element = element;
         this.ratio = ratio;
         this.autoSlide = autoSlide;
@@ -27,7 +27,7 @@ class Slider {
         this.currentSlide = initialSlide;
         this.nextSlide = initialSlide;
         this.totalSlides = this.element.children.length;
-        this.scrollable = new Scrollable(this.element, direction);
+        this.scrollable = new Scrollable(this.element);
         this.setInfiniteLoop(infiniteLoop);
 
         if (infiniteLoop) {
@@ -37,15 +37,11 @@ class Slider {
             });
 
             for (var i = 0; i < this.totalSlides + 2; i++) {
-                const child = allChild[(this.totalSlides - 1 + i) % this.totalSlides].cloneNode();
-                (child as HTMLElement).style.cssText += "height: 100%;width: 100%;flex-shrink: 0;";
-                this.element.appendChild(child);
+                this.element.appendChild(allChild[(this.totalSlides - 1 + i) % this.totalSlides].cloneNode());
             }
         }
 
-        this.scrollable.stopScrollOnScrollbarOrDrag();
         this.scrollable.updateScroll(this.getSlideIndex(this.currentSlide) * this.scrollable.getSize());
-
     }
 
     setInfiniteLoop(state: boolean) {
@@ -78,6 +74,7 @@ class Slider {
                     this.scrollable.updateScroll(this.scrollable.getSize());
                 }
             });
+
         }
     }
 

@@ -1,8 +1,7 @@
 "use strict";
 class Slider {
-    constructor(element, { ratio: ratio = 1, autoSlide: autoSlide = false, autoSlideDuration: autoSlideDuration = new Duration({ second: 1 }), initialSlide: initialSlide = 0, infiniteLoop: infiniteLoop = false } = { ratio: 1, autoSlide: false, autoSlideDuration: new Duration({ second: 5 }), initialSlide: 0, infiniteLoop: false }) {
+    constructor(element, { ratio: ratio = 1, autoSlide: autoSlide = false, autoSlideDuration: autoSlideDuration = new Duration({ second: 1 }), initialSlide: initialSlide = 0, infiniteLoop: infiniteLoop = false, direction = ScrollDirection.horizontal } = { ratio: 1, autoSlide: false, autoSlideDuration: new Duration({ second: 5 }), initialSlide: 0, infiniteLoop: false, direction: ScrollDirection.horizontal }) {
         this.infiniteLoop = false;
-        this.extraSlideCount = 0;
         this.element = element;
         this.ratio = ratio;
         this.autoSlide = autoSlide;
@@ -11,7 +10,7 @@ class Slider {
         this.currentSlide = initialSlide;
         this.nextSlide = initialSlide;
         this.totalSlides = this.element.children.length;
-        this.scrollable = new Scrollable(this.element);
+        this.scrollable = new Scrollable(this.element, direction);
         this.setInfiniteLoop(infiniteLoop);
         if (infiniteLoop) {
             var allChild = Array.from(this.element.children);
@@ -19,9 +18,12 @@ class Slider {
                 this.element.removeChild(element);
             });
             for (var i = 0; i < this.totalSlides + 2; i++) {
-                this.element.appendChild(allChild[(this.totalSlides - 1 + i) % this.totalSlides].cloneNode());
+                const child = allChild[(this.totalSlides - 1 + i) % this.totalSlides].cloneNode();
+                child.style.cssText += "height: 100%;width: 100%;flex-shrink: 0;";
+                this.element.appendChild(child);
             }
         }
+        this.scrollable.stopScrollOnScrollbarOrDrag();
         this.scrollable.updateScroll(this.getSlideIndex(this.currentSlide) * this.scrollable.getSize());
     }
     setInfiniteLoop(state) {

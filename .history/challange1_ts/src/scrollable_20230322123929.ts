@@ -1,89 +1,98 @@
-"use strict";
 class Scrollable {
-    constructor(element, scrollDirection = ScrollDirection.vertical) {
-        this.scrolling = false;
-        this.scroll = 0;
-        this.lastScroll = 0;
-        this.animation = new Animator();
+    element: HTMLElement;
+    scrollEnevtListener?: ScrollEventListener;
+    scrollListener?: ScrollListener;
+    scrolling: boolean = false;
+    interval?: any;
+    direction: ScrollDirection;
+    scroll: number = 0;
+
+    private lastScroll: number = 0;
+    private animation: Animator = new Animator();
+
+
+    constructor(element: HTMLElement, scrollDirection: ScrollDirection = ScrollDirection.vertical) {
         this.element = element;
         this.direction = scrollDirection;
         this._initialiseListeners();
-        this.element.style.cssText += `display: flex;flex-direction:flex-direction: ${scrollDirection == ScrollDirection.horizontal ? 'row' : 'column'};`;
-        console.log(this.direction);
     }
-    addScrollEventListener(listener) {
+
+    addScrollEventListener(listener: ScrollEventListener): void {
         this.scrollEnevtListener = listener;
     }
-    addScrollListener(listener) {
+
+    addScrollListener(listener: ScrollListener): void {
         this.scrollListener = listener;
     }
-    getScroll() {
+
+    getScroll(): number {
         if (this.direction == ScrollDirection.vertical)
             return this.element.scrollTop;
         else
             return this.element.scrollLeft;
     }
-    getSize() {
+
+    getSize(): number {
         if (this.direction == ScrollDirection.vertical)
-            //return this.element.getBoundingClientRect().height;
-            return this.element.clientHeight;
+            return this.element.getBoundingClientRect().height;
+            //return this.element.scrollHeight;
         else
             return this.element.getBoundingClientRect().width;
     }
-    updateScroll(scroll) {
+
+    updateScroll(scroll: number): void {
         if (this.direction == ScrollDirection.vertical)
             this.element.scrollTop = scroll;
         else
             this.element.scrollLeft = scroll;
     }
-    scrollTo(position, duration = new Duration(), curve = Curves.linner) {
+
+    scrollTo(position: number, duration: Duration = new Duration(), curve: Curves = Curves.linner): void {
         this.animation.stop();
         this.animation.addListener((value) => this.updateScroll(value));
         this.animation.play({ from: this.getScroll(), to: position, duration: duration, curve: curve });
     }
+
     _initialiseListeners() {
         this.element.addEventListener('scroll', (e) => {
             this.scroll = this.getScroll();
+
             if (this.scrollListener != undefined) {
                 this.scrollListener(this.scroll);
             }
+
             if (this.scrolling == false) {
                 this.scrolling = true;
                 if (this.interval == undefined && this.scrollEnevtListener != undefined) {
                     this.scrollEnevtListener(ScrollEvent.start);
                     this.interval = setInterval(() => {
-                        this.scrollEnevtListener(ScrollEvent.scrolling);
+                        this.scrollEnevtListener!(ScrollEvent.scrolling);
                         if (this.lastScroll == this.scroll) {
                             this.lastScroll = this.scroll;
                             clearInterval(this.interval);
                             this.interval = undefined;
                             this.scrolling = false;
-                            this.scrollEnevtListener(ScrollEvent.stop);
-                        }
-                        else {
+                            this.scrollEnevtListener!(ScrollEvent.stop);
+                        } else {
                             this.lastScroll = this.scroll;
                         }
                     }, 100);
                 }
             }
-        });
+        })
     }
-    getScrollState() {
-        var _a;
-        return (_a = this.animation) === null || _a === void 0 ? void 0 : _a.status;
+
+    getScrollState(): AnimatorStatus {
+        return this.animation?.status;
     }
-    stopScrollOnScrollbarOrDrag() {
-        this.element.style.cssText += "overflow: hidden;behavior: smooth;";
-    }
+
 }
-var ScrollEvent;
-(function (ScrollEvent) {
-    ScrollEvent[ScrollEvent["start"] = 0] = "start";
-    ScrollEvent[ScrollEvent["scrolling"] = 1] = "scrolling";
-    ScrollEvent[ScrollEvent["stop"] = 2] = "stop";
-})(ScrollEvent || (ScrollEvent = {}));
-var ScrollDirection;
-(function (ScrollDirection) {
-    ScrollDirection[ScrollDirection["horizontal"] = 0] = "horizontal";
-    ScrollDirection[ScrollDirection["vertical"] = 1] = "vertical";
-})(ScrollDirection || (ScrollDirection = {}));
+
+enum ScrollEvent { start, scrolling, stop }
+
+enum ScrollDirection { horizontal, vertical }
+
+type ScrollEventListener = (event: ScrollEvent) => void;
+
+type ScrollListener = (scorllAmount: number) => void;
+

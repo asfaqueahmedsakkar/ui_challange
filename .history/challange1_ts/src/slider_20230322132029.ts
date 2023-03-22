@@ -37,12 +37,14 @@ class Slider {
             });
 
             for (var i = 0; i < this.totalSlides + 2; i++) {
-                const child = allChild[(this.totalSlides - 1 + i) % this.totalSlides].cloneNode();
-                (child as HTMLElement).style.cssText += "height: 100%;width: 100%;flex-shrink: 0;";
-                this.element.appendChild(child);
+                this.element.appendChild(allChild[(this.totalSlides - 1 + i) % this.totalSlides].cloneNode());
             }
         }
 
+
+        Array.from(this.element.children).forEach(child => {
+            (child as HTMLElement).style.cssText += "height: 100%;width: 100%;flex-shrink: 0;";
+        });
         this.scrollable.stopScrollOnScrollbarOrDrag();
         this.scrollable.updateScroll(this.getSlideIndex(this.currentSlide) * this.scrollable.getSize());
 
